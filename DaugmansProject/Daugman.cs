@@ -21,7 +21,7 @@ namespace DaugmansProject
     }
     public class Daugman
     {
-        public static DaugmanResult FindIris(Bitmap bmp, int minR, int maxR, double angleStep, double xCutoff, double yCutoff)
+        public static DaugmanResult FindIris(Bitmap bmp, int minR, int maxR, double angleStep, double xCutoff, double yCutoff, IProgress<int> progress)
         {
             const double TWO_PI = 2 * Math.PI;
             int startX = (int)(xCutoff * bmp.Width);
@@ -45,10 +45,12 @@ namespace DaugmansProject
                     allPixels.Add(bmp.GetPixel(i, j));
                 }
             }
-            int avgIntensity = (int)GetAveragePixelIntensity(allPixels);
+            int avgIntensity = (int)ImageUtils.GetAveragePixelIntensity(allPixels);
             // Iris detection
             double maxIntensityDifference = 0.0, currentIntensity = 0.0, prevIntensity = 0.0; 
             int retX = 0, retY = 0, retR = 0;
+            long totalPixelCount = (endX - startX + 1) * (endY - startY + 1);
+            long progressCount = 0;
             List<Color> currentCirclePixels = new List<Color>();
             for (int i = startX; i <= endX; ++i)
             {
@@ -87,7 +89,7 @@ namespace DaugmansProject
                         {
                             break;
                         }
-                        currentIntensity = GetAveragePixelIntensity(currentCirclePixels);
+                        currentIntensity = ImageUtils.GetAveragePixelIntensity(currentCirclePixels);
                         double intensityDiff = currentRadius > minR ? Math.Abs(currentIntensity - prevIntensity) : 0.0; // We consider differences for the same pixel
                         if (maxIntensityDifference < intensityDiff)
                         {
@@ -99,25 +101,15 @@ namespace DaugmansProject
                         prevIntensity = currentIntensity;
                         currentCirclePixels.Clear();
                     }
+                    if(progress != null)
+                    {
+                        progress.Report((int)((++progressCount / (double)totalPixelCount) * 100));
+                    }
                 }
             }
 
             return new DaugmanResult { X = retX, Y = retY, R = retR, startX = startX, endX = endX, startY = startY, endY = endY };
         }
-        private static double GetAveragePixelIntensity(List<Color> pixels)
-        {
-            double ret = 0.0;
-            foreach(Color c in pixels)
-            {
-                ret += ToGrayscale(c);
-            }
-            ret /= pixels.Count;
-            return ret;
-        }
-
-        private static int ToGrayscale(Color c)
-        {
-            return (int)((c.R * 0.3) + (c.G * 0.59) + (c.B * 0.11));
-        }
+        
     }
 }

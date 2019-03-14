@@ -45,6 +45,11 @@
             this.label5 = new System.Windows.Forms.Label();
             this.angleStepTextBox = new System.Windows.Forms.TextBox();
             this.cleanImageButton = new System.Windows.Forms.Button();
+            this.daugmansProgressBar = new System.Windows.Forms.ProgressBar();
+            this.daugmansProgressBarLabel = new System.Windows.Forms.Label();
+            this.gaussianButton = new System.Windows.Forms.Button();
+            this.label6 = new System.Windows.Forms.Label();
+            this.standardDevTextBox = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).BeginInit();
             this.SuspendLayout();
             // 
@@ -90,7 +95,7 @@
             this.minRadiusTextBox.Name = "minRadiusTextBox";
             this.minRadiusTextBox.Size = new System.Drawing.Size(64, 20);
             this.minRadiusTextBox.TabIndex = 2;
-            this.minRadiusTextBox.Text = "5";
+            this.minRadiusTextBox.Text = "45";
             // 
             // maxRadiusTextBox
             // 
@@ -98,7 +103,7 @@
             this.maxRadiusTextBox.Name = "maxRadiusTextBox";
             this.maxRadiusTextBox.Size = new System.Drawing.Size(64, 20);
             this.maxRadiusTextBox.TabIndex = 3;
-            this.maxRadiusTextBox.Text = "20";
+            this.maxRadiusTextBox.Text = "60";
             // 
             // label1
             // 
@@ -124,7 +129,7 @@
             this.xCutoffTextBox.Name = "xCutoffTextBox";
             this.xCutoffTextBox.Size = new System.Drawing.Size(64, 20);
             this.xCutoffTextBox.TabIndex = 6;
-            this.xCutoffTextBox.Text = "0.33";
+            this.xCutoffTextBox.Text = "0.15";
             // 
             // yCutoffTextBox
             // 
@@ -132,7 +137,7 @@
             this.yCutoffTextBox.Name = "yCutoffTextBox";
             this.yCutoffTextBox.Size = new System.Drawing.Size(64, 20);
             this.yCutoffTextBox.TabIndex = 7;
-            this.yCutoffTextBox.Text = "0.33";
+            this.yCutoffTextBox.Text = "0.15";
             // 
             // label3
             // 
@@ -177,13 +182,63 @@
             this.cleanImageButton.TabIndex = 12;
             this.cleanImageButton.Text = "Clean Image";
             this.cleanImageButton.UseVisualStyleBackColor = true;
-            this.cleanImageButton.Click += new System.EventHandler(this.cleanImageButton_Click);
+            this.cleanImageButton.Click += new System.EventHandler(this.CleanImageButton_Click);
+            // 
+            // daugmansProgressBar
+            // 
+            this.daugmansProgressBar.Location = new System.Drawing.Point(726, 586);
+            this.daugmansProgressBar.Name = "daugmansProgressBar";
+            this.daugmansProgressBar.Size = new System.Drawing.Size(136, 23);
+            this.daugmansProgressBar.Step = 1;
+            this.daugmansProgressBar.TabIndex = 13;
+            // 
+            // daugmansProgressBarLabel
+            // 
+            this.daugmansProgressBarLabel.AutoSize = true;
+            this.daugmansProgressBarLabel.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.daugmansProgressBarLabel.Location = new System.Drawing.Point(868, 588);
+            this.daugmansProgressBarLabel.Name = "daugmansProgressBarLabel";
+            this.daugmansProgressBarLabel.Size = new System.Drawing.Size(33, 19);
+            this.daugmansProgressBarLabel.TabIndex = 14;
+            this.daugmansProgressBarLabel.Text = "0%";
+            // 
+            // gaussianButton
+            // 
+            this.gaussianButton.Location = new System.Drawing.Point(726, 613);
+            this.gaussianButton.Name = "gaussianButton";
+            this.gaussianButton.Size = new System.Drawing.Size(90, 23);
+            this.gaussianButton.TabIndex = 15;
+            this.gaussianButton.Text = "Gaussian Filter";
+            this.gaussianButton.UseVisualStyleBackColor = true;
+            this.gaussianButton.Click += new System.EventHandler(this.GaussianButton_Click);
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(723, 642);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(98, 13);
+            this.label6.TabIndex = 16;
+            this.label6.Text = "Standard Deviation";
+            // 
+            // standardDevTextBox
+            // 
+            this.standardDevTextBox.Location = new System.Drawing.Point(827, 635);
+            this.standardDevTextBox.Name = "standardDevTextBox";
+            this.standardDevTextBox.Size = new System.Drawing.Size(64, 20);
+            this.standardDevTextBox.TabIndex = 17;
+            this.standardDevTextBox.Text = "1.0";
             // 
             // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1305, 802);
+            this.ClientSize = new System.Drawing.Size(1305, 771);
+            this.Controls.Add(this.standardDevTextBox);
+            this.Controls.Add(this.label6);
+            this.Controls.Add(this.gaussianButton);
+            this.Controls.Add(this.daugmansProgressBarLabel);
+            this.Controls.Add(this.daugmansProgressBar);
             this.Controls.Add(this.cleanImageButton);
             this.Controls.Add(this.angleStepTextBox);
             this.Controls.Add(this.label5);
@@ -224,6 +279,11 @@
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.TextBox angleStepTextBox;
         private System.Windows.Forms.Button cleanImageButton;
+        private System.Windows.Forms.ProgressBar daugmansProgressBar;
+        private System.Windows.Forms.Label daugmansProgressBarLabel;
+        private System.Windows.Forms.Button gaussianButton;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.TextBox standardDevTextBox;
     }
 }
 

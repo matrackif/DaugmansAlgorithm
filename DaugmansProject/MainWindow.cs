@@ -20,21 +20,36 @@ namespace DaugmansProject
         //Load Image
         private void MenuItem2_Click(object sender, EventArgs e)
         {
-            pictureBox.Image = ImageUtils.loadImage();
+            pictureBox.Image = ImageUtils.LoadImage();
             cleanCopy_ = new Bitmap(pictureBox.Image);
         }
-
-        private void RunDaugmansButton_Click(object sender, EventArgs e)
+        private DaugmanResult FindIris(IProgress<int> progress)
+        {
+            
+            Bitmap copy = new Bitmap(cleanCopy_);
+            copy = ImageUtils.FilterProcessImage(double.Parse(standardDevTextBox.Text), copy);
+            
+            return Daugman.FindIris(copy,
+                                    int.Parse(minRadiusTextBox.Text),
+                                    int.Parse(maxRadiusTextBox.Text),
+                                    double.Parse(angleStepTextBox.Text),
+                                    double.Parse(xCutoffTextBox.Text),
+                                    double.Parse(yCutoffTextBox.Text),
+                                    progress);
+            
+        }
+        private async void RunDaugmansButton_Click(object sender, EventArgs e)
         {
             if(pictureBox.Image != null)
             {
-                DaugmanResult result = Daugman.FindIris(new Bitmap(pictureBox.Image),
-                                                 int.Parse(minRadiusTextBox.Text),
-                                                 int.Parse(maxRadiusTextBox.Text),
-                                                 double.Parse(angleStepTextBox.Text),
-                                                 double.Parse(xCutoffTextBox.Text),
-                                                 double.Parse(yCutoffTextBox.Text));
-                MessageBox.Show("Found iris with x=" + result.X + " y=" + result.Y + " r=" + result.R);
+                var progress = new Progress<int>(v =>
+                {
+                    // This lambda is executed in context of UI thread,
+                    // so it can safely update form controls
+                    daugmansProgressBar.Value = v;
+                    daugmansProgressBarLabel.Text = v + "%";
+                });
+                DaugmanResult result = await Task.Run(() => FindIris(progress));
                 DrawLine(result.startX, 0, result.startX, pictureBox.Image.Height - 1);
                 DrawLine(result.endX, 0, result.endX, pictureBox.Image.Height - 1);
                 DrawLine(0, result.startY, pictureBox.Image.Width - 1, result.startY);
@@ -64,9 +79,15 @@ namespace DaugmansProject
             pictureBox.Image = bmp;
         }
 
-        private void cleanImageButton_Click(object sender, EventArgs e)
+        private void CleanImageButton_Click(object sender, EventArgs e)
         {
             pictureBox.Image = new Bitmap(cleanCopy_);
+        }
+
+        private async void GaussianButton_Click(object sender, EventArgs e)
+        {
+            Bitmap result = await Task.Run(() => ImageUtils.FilterProcessImage(double.Parse(standardDevTextBox.Text), new Bitmap(pictureBox.Image)));
+            pictureBox.Image = result;
         }
     }
 }
