@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -27,14 +28,14 @@ namespace DaugmansProject
         {
             
             Bitmap copy = new Bitmap(cleanCopy_);
-            copy = ImageUtils.FilterProcessImage(double.Parse(standardDevTextBox.Text), copy);
+            copy = ImageUtils.FilterProcessImage(double.Parse(standardDevTextBox.Text, CultureInfo.InvariantCulture), copy);
             
             return Daugman.FindIris(copy,
-                                    int.Parse(minRadiusTextBox.Text),
-                                    int.Parse(maxRadiusTextBox.Text),
-                                    double.Parse(angleStepTextBox.Text),
-                                    double.Parse(xCutoffTextBox.Text),
-                                    double.Parse(yCutoffTextBox.Text),
+                                    int.Parse(minRadiusTextBox.Text, CultureInfo.InvariantCulture),
+                                    int.Parse(maxRadiusTextBox.Text, CultureInfo.InvariantCulture),
+                                    double.Parse(angleStepTextBox.Text, CultureInfo.InvariantCulture),
+                                    double.Parse(xCutoffTextBox.Text, CultureInfo.InvariantCulture),
+                                    double.Parse(yCutoffTextBox.Text, CultureInfo.InvariantCulture),
                                     progress);
             
         }
@@ -86,7 +87,7 @@ namespace DaugmansProject
 
         private async void GaussianButton_Click(object sender, EventArgs e)
         {
-            Bitmap result = await Task.Run(() => ImageUtils.FilterProcessImage(double.Parse(standardDevTextBox.Text), new Bitmap(pictureBox.Image)));
+            Bitmap result = await Task.Run(() => ImageUtils.FilterProcessImage(double.Parse(standardDevTextBox.Text, CultureInfo.InvariantCulture), new Bitmap(pictureBox.Image)));
             pictureBox.Image = result;
         }
     }
