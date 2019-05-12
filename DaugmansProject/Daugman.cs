@@ -47,7 +47,7 @@ namespace DaugmansProject
             }
             int avgIntensity = (int)ImageUtils.GetAveragePixelIntensity(allPixels);
             // Iris detection
-            double maxIntensityDifference = 0.0, currentIntensity = 0.0, prevIntensity = 0.0; 
+            double maxIntensityDifference = 0.0, currentIntensity = 0.0, prevIntensity = 0.0;
             int retX = 0, retY = 0, retR = 0;
             long totalPixelCount = (endX - startX + 1) * (endY - startY + 1);
             long progressCount = 0;
@@ -85,7 +85,7 @@ namespace DaugmansProject
                             }
 
                         }
-                        if(!circleInRegion)
+                        if (!circleInRegion)
                         {
                             break;
                         }
@@ -101,7 +101,7 @@ namespace DaugmansProject
                         prevIntensity = currentIntensity;
                         currentCirclePixels.Clear();
                     }
-                    if(progress != null)
+                    if (progress != null)
                     {
                         progress.Report((int)((++progressCount / (double)totalPixelCount) * 100));
                     }
@@ -109,6 +109,34 @@ namespace DaugmansProject
             }
 
             return new DaugmanResult { X = retX, Y = retY, R = retR, startX = startX, endX = endX, startY = startY, endY = endY };
+        }
+        private static List<List<int>> UnravelImage(Bitmap bm, DaugmanResult dr)
+        {
+            List<List<int>> pixelValues = new List<List<int>>();
+            for (double alpha = 0.0; alpha < Math.PI * 2; alpha += 0.1)
+            {
+                pixelValues.Add(new List<int>());
+                int currIdx = pixelValues.Count - 1;
+                for (int r = 1; r <= dr.R; r += 1)
+                {
+                    int x = (int)(r * Math.Cos(alpha)) + dr.X;
+                    int y = (int)(r * Math.Sin(alpha)) + dr.Y;
+
+                    pixelValues[currIdx].Add(ImageUtils.ToGrayscaleInt(bm.GetPixel(x, y)));
+                }
+            }
+            
+            return pixelValues;
+        }
+        public static string GetBinaryStringFromIris(Bitmap bm, DaugmanResult dr)
+        {
+            List<double> blocks = new List<double>();
+            List<List<int>> pixelValues = UnravelImage(bm, dr);
+            const int BLOCK_SIZE = 16;
+            
+            
+            string ret = "";
+            return ret;
         }
         
     }
