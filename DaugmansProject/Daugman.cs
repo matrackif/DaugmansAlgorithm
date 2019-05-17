@@ -133,9 +133,38 @@ namespace DaugmansProject
             List<double> blocks = new List<double>();
             List<List<int>> pixelValues = UnravelImage(bm, dr);
             const int BLOCK_SIZE = 16;
-            
-            
+            for (int x = 0; x < pixelValues.Count; ++x)
+            {
+                for (int y = 0; y < pixelValues[x].Count; ++y)
+                {
+                    int d = DaugmanOperator(pixelValues, x, y);
+                }
+            }
+
             string ret = "";
+            return ret;
+        }
+
+        public static int DaugmanOperator(List<List<int>> pixelValues, int x, int y)
+        {
+            int ret = 0;
+            // 3x3 block
+            int pow = 0;
+            for(int i = -1; i < 2; ++i)
+            {
+                for (int j = -1; j < 2; ++j)
+                {
+                    int xIdx = x + i;
+                    int yIdx = y + j;
+                    if(xIdx > 0 && xIdx < pixelValues.Count && yIdx > 0 && yIdx < pixelValues[xIdx].Count
+                        && pixelValues[x + i][y + j] > pixelValues[x][y])
+                    {
+                        ret += (int)Math.Pow(2, pow);
+                    }
+                    // Else 0
+                    ++pow;
+                }
+            }        
             return ret;
         }
         
