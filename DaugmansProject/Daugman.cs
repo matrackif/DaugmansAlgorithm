@@ -113,7 +113,7 @@ namespace DaugmansProject
         private static List<List<int>> UnravelImage(Bitmap bm, DaugmanResult dr)
         {
             List<List<int>> pixelValues = new List<List<int>>();
-            for (double alpha = 0.0; alpha < Math.PI * 2; alpha += 0.1)
+            for (double alpha = 0.0; alpha < Math.PI * 2; alpha += 0.01)
             {
                 pixelValues.Add(new List<int>());
                 int currIdx = pixelValues.Count - 1;

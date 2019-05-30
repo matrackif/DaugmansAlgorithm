@@ -101,7 +101,7 @@ namespace DaugmansProject
                 return new Bitmap(Image.FromFile(dialog.FileName));
                 //return createNonIndexedImage(Image.FromFile(dialog.FileName));
             }
-            return new Bitmap("");
+            return null;
         }
         //Images like .gif has indexed pixel format which throw an exception, this will convert image to non-indexed
         public static Bitmap CreateNonIndexedImage(Image src)
@@ -157,8 +157,20 @@ namespace DaugmansProject
             }
             return ret;
         }
+        public static int GetHammingDistance(string s1, string s2)
+        {
+            int ret = 0;
+            for(int i = 0; i < Math.Min(s1.Length, s2.Length); ++i)
+            {
+                if(s1[i] != s2[i])
+                {
+                    ++ret;
+                }
+            }
+            return ret;
+        }
     }
-
+    
     public static class MathListExtensions
     {
         public static double Mean(this List<double> values)

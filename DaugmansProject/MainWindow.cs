@@ -26,6 +26,7 @@ namespace DaugmansProject
         }
         private Image cleanCopy_ = null;
         private DaugmanResult lastResult_ = null;
+        private string lastBinaryString_ = null;
         Progress<int> progress_ = null;
         //Load Image
         private void MenuItem2_Click(object sender, EventArgs e)
@@ -100,13 +101,20 @@ namespace DaugmansProject
             Bitmap result = await Task.Run(() => ImageUtils.FilterProcessImage(double.Parse(standardDevTextBox.Text, CultureInfo.InvariantCulture), new Bitmap(pictureBox.Image)));
             pictureBox.Image = result;
         }
+        
 
         private async void GetBinaryVectorFromIris()
         {
             if(cleanCopy_ != null && lastResult_ != null)
             {             
                 string result = await Task.Run(() => Daugman.GetBinaryStringFromIris(new Bitmap(cleanCopy_), lastResult_));
-                MessageBox.Show("Binary string from image:\n" + result);
+                string hammingDistToPrev = "";
+                if(lastBinaryString_ != null)
+                {
+                    hammingDistToPrev += ImageUtils.GetHammingDistance(lastBinaryString_, result);
+                }
+                lastBinaryString_ = result;
+                MessageBox.Show("Binary string from image:\n" + lastBinaryString_ + "\nHamming distance to previous image: " + hammingDistToPrev);
             }
         }
     }
