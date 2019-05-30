@@ -113,7 +113,7 @@ namespace DaugmansProject
         private static List<List<int>> UnravelImage(Bitmap bm, DaugmanResult dr)
         {
             List<List<int>> pixelValues = new List<List<int>>();
-            for (double alpha = 0.0; alpha < Math.PI * 2; alpha += 0.01)
+            for (double alpha = 0.0; alpha < Math.PI * 2; alpha += 0.1)
             {
                 pixelValues.Add(new List<int>());
                 int currIdx = pixelValues.Count - 1;
@@ -133,52 +133,51 @@ namespace DaugmansProject
             string ret = "";
             List<double> blocks = new List<double>();
             List<List<int>> pixelValues = UnravelImage(bm, dr);
-            const int BLOCK_SIZE = 8;
+            const int BLOCK_SIZE = 16;
             //int NUM_BLOCKS_X = bm.Width / BLOCK_SIZE;
             //int NUM_BLOCKS_Y = bm.Height / BLOCK_SIZE;
             int blockStartX = 0, blockStartY = 0;
-            int blockEndX = BLOCK_SIZE, blockEndY = BLOCK_SIZE;
+            // int blockEndX = BLOCK_SIZE, blockEndY = BLOCK_SIZE;
             List<double> prevValues = new List<double>();
 
-            while (blockEndX < pixelValues.Count && blockEndY < pixelValues[0].Count)
+            for (blockStartY = 0; blockStartY + BLOCK_SIZE < pixelValues[0].Count; blockStartY += BLOCK_SIZE)
             {
-                List<double> values = new List<double>();
-                for (int x = blockStartX; x < blockEndX; ++x)
+                for(blockStartX = 0; blockStartX + BLOCK_SIZE < pixelValues.Count; blockStartX += BLOCK_SIZE)
                 {
-                    for (int y = blockStartY; y < blockEndY; ++y)
+                    List<double> values = new List<double>();
+                    for (int x = blockStartX; x < blockStartX + BLOCK_SIZE; ++x)
                     {
-                        values.Add(DaugmanOperator(pixelValues, x, y));
+                        for (int y = blockStartY; y < blockStartY + BLOCK_SIZE; ++y)
+                        {
+                            values.Add(DaugmanOperator(pixelValues, x, y));
+                        }
                     }
-                }
-                blockStartX += BLOCK_SIZE;
-                blockEndX += BLOCK_SIZE;
-                blockStartY += BLOCK_SIZE;
-                blockEndY += BLOCK_SIZE;
-                if(prevValues.Count > 0)
-                {
-                    double prevMean = prevValues.Mean();
-                    double prevStd = prevValues.StandardDeviation();
-                    double currMean = values.Mean();
-                    double currStd = values.StandardDeviation();
-                    if(prevMean < currMean)
+                    
+                    if (prevValues.Count > 0)
                     {
-                        ret += "1";
+                        double prevMean = prevValues.Mean();
+                        double prevStd = prevValues.StandardDeviation();
+                        double currMean = values.Mean();
+                        double currStd = values.StandardDeviation();
+                        if (prevMean < currMean)
+                        {
+                            ret += "1";
+                        }
+                        else
+                        {
+                            ret += "0";
+                        }
+                        if (prevStd < currStd)
+                        {
+                            ret += "1";
+                        }
+                        else
+                        {
+                            ret += "0";
+                        }
                     }
-                    else
-                    {
-                        ret += "0";
-                    }
-                    if (prevStd < currStd)
-                    {
-                        ret += "1";
-                    }
-                    else
-                    {
-                        ret += "0";
-                    }                  
-                }
-
-                prevValues = values;
+                    prevValues = values;
+                }            
             }            
             
             return ret;
