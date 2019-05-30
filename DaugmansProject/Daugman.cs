@@ -113,7 +113,7 @@ namespace DaugmansProject
         private static List<List<int>> UnravelImage(Bitmap bm, DaugmanResult dr)
         {
             List<List<int>> pixelValues = new List<List<int>>();
-            for (double alpha = 0.0; alpha < Math.PI * 2; alpha += 0.1)
+            for (double alpha = 0.0; alpha < Math.PI * 2; alpha += 0.01)
             {
                 pixelValues.Add(new List<int>());
                 int currIdx = pixelValues.Count - 1;
@@ -130,18 +130,57 @@ namespace DaugmansProject
         }
         public static string GetBinaryStringFromIris(Bitmap bm, DaugmanResult dr)
         {
+            string ret = "";
             List<double> blocks = new List<double>();
             List<List<int>> pixelValues = UnravelImage(bm, dr);
-            const int BLOCK_SIZE = 16;
-            for (int x = 0; x < pixelValues.Count; ++x)
-            {
-                for (int y = 0; y < pixelValues[x].Count; ++y)
-                {
-                    int d = DaugmanOperator(pixelValues, x, y);
-                }
-            }
+            const int BLOCK_SIZE = 8;
+            //int NUM_BLOCKS_X = bm.Width / BLOCK_SIZE;
+            //int NUM_BLOCKS_Y = bm.Height / BLOCK_SIZE;
+            int blockStartX = 0, blockStartY = 0;
+            int blockEndX = BLOCK_SIZE, blockEndY = BLOCK_SIZE;
+            List<double> prevValues = new List<double>();
 
-            string ret = "";
+            while (blockEndX < pixelValues.Count && blockEndY < pixelValues[0].Count)
+            {
+                List<double> values = new List<double>();
+                for (int x = blockStartX; x < blockEndX; ++x)
+                {
+                    for (int y = blockStartY; y < blockEndY; ++y)
+                    {
+                        values.Add(DaugmanOperator(pixelValues, x, y));
+                    }
+                }
+                blockStartX += BLOCK_SIZE;
+                blockEndX += BLOCK_SIZE;
+                blockStartY += BLOCK_SIZE;
+                blockEndY += BLOCK_SIZE;
+                if(prevValues.Count > 0)
+                {
+                    double prevMean = prevValues.Mean();
+                    double prevStd = prevValues.StandardDeviation();
+                    double currMean = values.Mean();
+                    double currStd = values.StandardDeviation();
+                    if(prevMean < currMean)
+                    {
+                        ret += "1";
+                    }
+                    else
+                    {
+                        ret += "0";
+                    }
+                    if (prevStd < currStd)
+                    {
+                        ret += "1";
+                    }
+                    else
+                    {
+                        ret += "0";
+                    }                  
+                }
+
+                prevValues = values;
+            }            
+            
             return ret;
         }
 
@@ -156,13 +195,16 @@ namespace DaugmansProject
                 {
                     int xIdx = x + i;
                     int yIdx = y + j;
-                    if(xIdx > 0 && xIdx < pixelValues.Count && yIdx > 0 && yIdx < pixelValues[xIdx].Count
-                        && pixelValues[x + i][y + j] > pixelValues[x][y])
+                    if(xIdx != x && yIdx != y)
                     {
-                        ret += (int)Math.Pow(2, pow);
-                    }
-                    // Else 0
-                    ++pow;
+                        if (xIdx > 0 && xIdx < pixelValues.Count && yIdx > 0 && yIdx < pixelValues[xIdx].Count
+                        && pixelValues[xIdx][yIdx] > pixelValues[x][y])
+                        {
+                            ret += (int)Math.Pow(2, pow);
+                        }
+                        // Else 0
+                        ++pow;
+                    }                 
                 }
             }        
             return ret;

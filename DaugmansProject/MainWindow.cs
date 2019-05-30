@@ -106,6 +106,7 @@ namespace DaugmansProject
             if(cleanCopy_ != null && lastResult_ != null)
             {             
                 string result = await Task.Run(() => Daugman.GetBinaryStringFromIris(new Bitmap(cleanCopy_), lastResult_));
+                MessageBox.Show("Binary string from image:\n" + result);
             }
         }
     }
